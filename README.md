@@ -1,9 +1,9 @@
 # PrivRaschPuplish
 
-Authors: <br />
-Teresa Anna Steiner (s170063@student.dtu.dk) <br />
-David Enslev Nyrnberg (s123997@student.dtu.dk) <br />
-Lars Kai Larsen (lkai@dtu.dk) <br /> 
+Authors:<br /> 
+MSc Student Teresa Anna Steiner (s170063@student.dtu.dk)<br /> 
+MSc Student David Enslev Nyrnberg (s123997@student.dtu.dk)<br /> 
+Professor Lars Kai Hansen (lkai@dtu.dk)<br /> 
 
 TODO:
 - Python to Matlab

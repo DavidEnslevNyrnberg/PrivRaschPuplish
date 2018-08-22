@@ -1,4 +1,4 @@
-function [delta,beta] = suff_stat_parameter_est(X,lam,epsi,N,D)
+function [delta,beta] = suff_stat_parameter_est(X,lam,epsi,N,D,options)
     % sufficient stats
     xd=sum(X,2);
     xn=sum(X,1);
@@ -7,8 +7,8 @@ function [delta,beta] = suff_stat_parameter_est(X,lam,epsi,N,D)
      del=0.001*randn(1,D);
 %         %     
      w0=[bet;del'];
-     options = optimoptions('fminunc','Algorithm','quasi-newton','SpecifyObjectiveGradient',true,'MaxIter',10^5,'MaxFunEvals',10^5,'TolX',10^-5,'Display','off');
      % tune parameters
+     options = optimoptions('fminunc','Algorithm','quasi-newton','SpecifyObjectiveGradient',true,'MaxIter',10^5,'MaxFunEvals',10^5,'TolX',10^-5,'Display','off');
      w=fminunc(@(w) rasch_negloglik_grad_priv_suff(w,xd,xn,lam),w0,options);
      bet=w(1:N);
      del=w((N+1):(N+D))';
@@ -22,7 +22,7 @@ function [delta,beta] = suff_stat_parameter_est(X,lam,epsi,N,D)
     %bet_priv=w(1:N);  % when we compute probabilities this step approximates that each student computes her grade on her own non-private beta
     del_priv=w_priv((N+1):(N+D))';
     %now reoptimize beta
-    betn_arr=zeros(N);
+    betn_arr=zeros(N,1);
     for q=1:N
         betn0=0;
         student=X(q,:);

@@ -1,13 +1,13 @@
-function [likelihood,w_gradient] = rasch_neglog_likelihood_private_TD(w, data, lambda, epsilon)
+function [likelihood,w_gradient] = rasch_neglog_likelihood_private_TD(w, data, lambda, b)%epsilon)
 %return the private negative loglikelihood and gradient of the Rasch model
 [N,I] = size(data);
 wBeta = w(1:N);
 wDelta = w(N+1:end)';
 
-b_norm = gamrnd(I, sqrt(I)/epsilon);
-% then direction randomly in d-dimensional space (http://mathworld.wolfram.com/HyperspherePointPicking.html)
-bx = normrnd(0, 1, [1,I]);
-b = bx/norm(bx)*b_norm;
+% b_norm = gamrnd(I, sqrt(I)/epsilon);
+% % then direction randomly in d-dimensional space (http://mathworld.wolfram.com/HyperspherePointPicking.html)
+% bx = normrnd(0, 1, [1,I]);
+% b = bx/norm(bx)*b_norm;
 
 % Rasch weight matrix
 wMatrix = log(1+exp(wBeta*ones(1,I)-ones(N,1)*wDelta));

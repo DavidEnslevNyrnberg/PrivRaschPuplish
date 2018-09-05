@@ -10,7 +10,7 @@ wDelta = w(N+1:end)';
 % b = bx/norm(bx)*b_norm;
 
 % Rasch weight matrix
-wMatrix = log(1+exp(wBeta*ones(1,I)-ones(N,1)*wDelta));
+wMatrix = exp(wBeta*ones(1,I)-ones(N,1)*wDelta);
 
 % matrix for neg-log-lik and calc likelihood
 wLikeMatrix = log(1+wMatrix);

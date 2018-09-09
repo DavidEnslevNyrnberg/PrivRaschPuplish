@@ -1,5 +1,4 @@
 function [negloglik, grad ] = rasch_negloglik_grad_priv_suff(w, xd_priv,xn_priv,lam)
-%  Detailed explanation goes here
 % computes the normalized neg log-likelihood of the Rasch model
 % based on sufficients statistics sum(X,1) and sum(X,2)
 % lam is L2 regularization

@@ -4,7 +4,7 @@ function [likelihood,w_gradient] =  rasch_neglog_likelihood(w, data, lambda)
 wBeta = w(1:N);
 wDelta = w(N+1:end)';
 
-wMatrix = exp(wBeta*ones(1,I)- ones(N,1)*wDelta); % check matrix mult
+wMatrix = exp(wBeta*ones(1,I)- ones(N,1)*wDelta);
 
 % matrix for neg-log-lik and calc likelihood
 wLikeMatrix = log(1+wMatrix);

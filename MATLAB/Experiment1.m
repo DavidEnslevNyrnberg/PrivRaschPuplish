@@ -30,7 +30,7 @@ for k = 1:length(nStudent)
         for n = 1:N
             beta_n = 0;
             student = simRaschData(n,:);
-            beta_est_reopt(n) = fminunc(@(beta) single_beta_TD(beta, delta_est, student, lam), beta_n, options);            
+            beta_est_reopt(n) = fminunc(@(beta) single_beta(beta, delta_est, student, lam), beta_n, options);            
         end
         % estimate global and reopt Rasch
         raschModel_global = raschModel(beta_est_global, delta_est);

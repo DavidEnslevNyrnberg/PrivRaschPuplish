@@ -34,7 +34,7 @@ for k = 1:length(nStudent)
         for n = 1:N
             beta_n = 0;
             student = simTrainData(n,:);
-            nonPriv_beta_est_reopt(n) = fminunc(@(beta) single_beta_TD(beta, nonPriv_delta_est_global, student, lam), beta_n, options);
+            nonPriv_beta_est_reopt(n) = fminunc(@(beta) single_beta(beta, nonPriv_delta_est_global, student, lam), beta_n, options);
         end
         nonPriv_raschModel = raschModel(nonPriv_beta_est_reopt, nonPriv_delta_est_global);
         
@@ -44,16 +44,16 @@ for k = 1:length(nStudent)
             b_norm = gamrnd(I, sqrt(I) / epsi(l));
             bx = normrnd(0,1,[1,I]);
             b = bx / norm(bx) * b_norm;
-            w_opPriv=fminunc(@(w) rasch_neglog_likelihood_private_TD(w,simTrainData,lam,b),w_ini,options);
+            w_opPriv = fminunc(@(w) rasch_neglog_likelihood_private(w,simTrainData,lam,b),w_ini,options);
             
             opPriv_est_beta_global = w_opPriv(1:N);
             opPriv_est_delta = w_opPriv(N+1:end)';
-            % re-optimized est non-priv
+            % re-optimized est priv
             opPriv_est_beta = zeros(N, 1);
             for n = 1:N
                 beta_n = 0;
                 student = simTrainData(n,:);
-                opPriv_est_beta(n) = fminunc(@(beta) single_beta_TD(beta, opPriv_est_delta, student, lam), beta_n, options);
+                opPriv_est_beta(n) = fminunc(@(beta) single_beta(beta, opPriv_est_delta, student, lam), beta_n, options);
             end
             % Sufficient statistic
             [suffStatPriv_est_delta, suffStatPriv_est_beta] = suff_stat_parameter_est(simTrainData, lam, epsi(l), N, I, options);
@@ -69,7 +69,7 @@ for k = 1:length(nStudent)
             corr_nonPriv_vs_suffStatPriv = corrcoef(nonPriv_raschModel, suffStatPriv_raschModel(:,:,l));        
             EX2.corrMatrix_nonPriv_suffPriv(k,rep,l) = corr_nonPriv_vs_suffStatPriv(1, 2); 
         end
-        % true, global and reopt error to test set
+        % true, OP and SuffStat error to test set
         EX2.error_true(k) = EX2.error_true(k)+sum(sum(abs(round(raschModel_true)-simTestData)));
         EX2.error_opPriv(k,:) = EX2.error_opPriv(k,:)+reshape(sum(sum(abs(round(opPriv_raschModel)-simTestData))), size(epsi));
         EX2.error_suffPriv(k,:) = EX2.error_suffPriv(k,:)+reshape(sum(sum(abs(round(suffStatPriv_raschModel)-simTestData))), size(epsi));

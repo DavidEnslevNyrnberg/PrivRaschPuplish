@@ -8,15 +8,12 @@
 % Output:
 
 % initialize result array
-EX3.corrMatrix_nonPriv_opPriv = zeros(length(nStudent), bootstrap);
-EX3.corrMatrix_nonPriv_suffPriv = zeros(length(nStudent), bootstrap);
-EX3.corrMatrix_opPriv_suffPriv = zeros(length(nStudent), bootstrap);
-EX3.error_nonPriv = zeros(length(nStudent), 1);
-EX3.error_opPriv = zeros(length(nStudent), 1);
-EX3.error_suffPriv = zeros(length(nStudent), 1);
-EX3.nonPriv_raschModel_vec = {zeros(length(nStudent), 1)};
-EX3.opPriv_raschModel_vec = {zeros(length(nStudent), 1)};
-EX3.suffStatPriv_raschModel_vec = {zeros(length(nStudent), 1)};
+EX4.corrMatrix_nonPriv_opPriv = zeros(length(nStudent), bootstrap);
+EX4.corrMatrix_nonPriv_suffPriv = zeros(length(nStudent), bootstrap);
+EX4.corrMatrix_opPriv_suffPriv = zeros(length(nStudent), bootstrap);
+EX4.error_nonPriv = zeros(length(nStudent), 1);
+EX4.error_opPriv = zeros(length(nStudent), 1);
+EX4.error_suffPriv = zeros(length(nStudent), 1);
 
 I = iTest;
 for k = 1:length(nStudent)
@@ -37,7 +34,7 @@ for k = 1:length(nStudent)
         end
         
         % private rasch estimation
-        b_norm = gamrnd(I, sqrt(I)/EX3_epsilon);
+        b_norm = gamrnd(I, sqrt(I)/EX4_epsilon);
         bx = normrnd(0,1,[1,I]);
         b = bx/norm(bx)*b_norm;
         w_opPriv = fminunc(@(w) rasch_neglog_likelihood_private(w,data_new,lam,b),w_ini,options);
@@ -52,31 +49,28 @@ for k = 1:length(nStudent)
             opPriv_est_beta(n) = fminunc(@(beta) single_beta(beta, opPriv_est_delta, student, lam), beta_n, options);
         end
         % Sufficient statistic
-        [suffStatPriv_est_delta, suffStatPriv_est_beta] = suff_stat_parameter_est(data_new, lam, EX3_epsilon, N, I, options);
+        [suffStatPriv_est_delta, suffStatPriv_est_beta] = suff_stat_parameter_est(data_new, lam, EX4_epsilon, N, I, options);
     
         % estimate Rasch models
         nonPriv_raschModel = raschModel(nonPriv_beta_est_reopt, nonPriv_delta_est_global);
         opPriv_raschModel = raschModel(opPriv_est_beta, opPriv_est_delta);
         suffStatPriv_raschModel = raschModel(suffStatPriv_est_beta, suffStatPriv_est_delta);
-        EX3.nonPriv_raschModel_vec{k} = reshape(nonPriv_raschModel, [N*I,1]);
-        EX3.opPriv_raschModel_vec{k} = reshape(opPriv_raschModel, [N*I,1]);
-        EX3.suffStatPriv_raschModel_vec{k} = reshape(suffStatPriv_raschModel, [N*I,1]);
-        
+            
         % correlation matrixes corrMatrix_true_opPriv
         corr_nonPriv_vs_opPriv = corrcoef(nonPriv_raschModel, opPriv_raschModel);
-        EX3.corrMatrix_nonPriv_opPriv(k,boots) = corr_nonPriv_vs_opPriv(1, 2);
+        EX4.corrMatrix_nonPriv_opPriv(k,boots) = corr_nonPriv_vs_opPriv(1, 2);
         corr_nonPriv_vs_suffStatPriv = corrcoef(nonPriv_raschModel, suffStatPriv_raschModel);
-        EX3.corrMatrix_nonPriv_suffPriv(k,boots) = corr_nonPriv_vs_suffStatPriv(1, 2);
+        EX4.corrMatrix_nonPriv_suffPriv(k,boots) = corr_nonPriv_vs_suffStatPriv(1, 2);
         corr_opPriv_vs_suffStatPriv = corrcoef(opPriv_raschModel, suffStatPriv_raschModel);
-        EX3.corrMatrix_opPriv_suffPriv(k,boots) = corr_opPriv_vs_suffStatPriv(1, 2);
+        EX4.corrMatrix_opPriv_suffPriv(k,boots) = corr_opPriv_vs_suffStatPriv(1, 2);
         
         % nonPriv, OP and SuffStat error to test set
-        EX3.error_nonPriv(k) = EX3.error_nonPriv(k)+sum(sum(abs(round(nonPriv_raschModel)-data_new)));
-        EX3.error_opPriv(k) = EX3.error_opPriv(k)+sum(sum(abs(round(opPriv_raschModel)-data_new)));
-        EX3.error_suffPriv(k) = EX3.error_suffPriv(k)+sum(sum(abs(round(suffStatPriv_raschModel)-data_new)));
+        EX4.error_nonPriv(k) = EX4.error_nonPriv(k)+sum(sum(abs(round(nonPriv_raschModel)-data_new)));
+        EX4.error_opPriv(k) = EX4.error_opPriv(k)+sum(sum(abs(round(opPriv_raschModel)-data_new)));
+        EX4.error_suffPriv(k) = EX4.error_suffPriv(k)+sum(sum(abs(round(suffStatPriv_raschModel)-data_new)));
     end
     % error normalization
-    EX3.error_nonPriv(k) = EX3.error_nonPriv(k)/(bootstrap*I*N);
-    EX3.error_opPriv(k) = EX3.error_opPriv(k)/(bootstrap*I*N);
-    EX3.error_suffPriv(k) = EX3.error_suffPriv(k)/(bootstrap*I*N);
+    EX4.error_nonPriv(k) = EX4.error_nonPriv(k)/(bootstrap*I*N);
+    EX4.error_opPriv(k) = EX4.error_opPriv(k)/(bootstrap*I*N);
+    EX4.error_suffPriv(k) = EX4.error_suffPriv(k)/(bootstrap*I*N);
 end
